@@ -1,4 +1,4 @@
-package gmt.planner.operation
+package gmt.planner.language
 
 object Ite extends TermOperation {
     def FUNCTION: (Term, Term, Term) => Term = (a, b, c) => Ite(a, b, c)

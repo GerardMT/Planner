@@ -3,6 +3,7 @@ package gmt.planner.solver
 import java.io._
 import java.nio.charset.StandardCharsets
 
+import gmt.planner.solver.SolverResult.{NoneSolverResult, SolverResult, SomeSolverResult}
 import gmt.planner.solver.value.{ValueBoolean, ValueInteger}
 
 import scala.collection.mutable.ListBuffer

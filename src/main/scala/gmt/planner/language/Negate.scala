@@ -1,4 +1,4 @@
-package gmt.planner.operation
+package gmt.planner.language
 
 object Negate extends TermOperation {
     def FUNCTION: Term => Term = a => Negate(a)

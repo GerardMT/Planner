@@ -1,4 +1,4 @@
-package gmt.planner.operation
+package gmt.planner.language
 
 case class Boolean(value: scala.Boolean) extends Term {
 

@@ -4,16 +4,20 @@ import gmt.planner.solver.Result.EnumResult
 
 object SolverResult {
 
-    trait SolverResult
+    sealed abstract class SolverResult(val result: EnumResult,
+                                       val milliseconds: Long)
 
-    case class NoneSolverResult(result: EnumResult,
-                                milliseconds: Long)
-        extends SolverResult
+    case class NoneSolverResult(override val result: EnumResult,
+                                override val milliseconds: Long)
+        extends SolverResult(result,
+            milliseconds)
 
     case class SomeSolverResult(override val result: EnumResult,
                                 override val milliseconds: Long,
                                 assignments: Seq[Assignment])
-        extends NoneSolverResult(result, milliseconds)
+        extends SolverResult(result,
+            milliseconds)
+
 }
 
 

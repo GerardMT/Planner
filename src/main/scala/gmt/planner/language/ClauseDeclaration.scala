@@ -1,4 +1,4 @@
-package gmt.planner.operation
+package gmt.planner.language
 
 case class ClauseDeclaration(a: Term) extends Term {
 

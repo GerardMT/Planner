@@ -1,7 +1,7 @@
 package gmt.planner.translator
 
 import gmt.planner.encoder.Encoding
-import gmt.planner.operation._
+import gmt.planner.language._
 
 object SMTLib2 {
 

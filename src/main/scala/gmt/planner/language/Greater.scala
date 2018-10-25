@@ -1,4 +1,4 @@
-package gmt.planner.operation
+package gmt.planner.language
 
 object Greater extends TermOperation {
     def FUNCTION: (Term, Term) => Term = (a, b) => Greater(a, b)

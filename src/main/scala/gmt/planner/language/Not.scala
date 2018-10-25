@@ -1,4 +1,4 @@
-package gmt.planner.operation
+package gmt.planner.language
 
 object Not extends TermOperation {
     def FUNCTION: Term => Term = a => Not(a)

@@ -1,6 +1,6 @@
 package gmt.planner.encoder
 
-import gmt.planner.operation.{Term, Variable, VariableDeclaration}
+import gmt.planner.language.{Term, Variable, VariableDeclaration}
 
 import scala.collection.mutable.ListBuffer
 import scala.collection.{immutable, mutable}

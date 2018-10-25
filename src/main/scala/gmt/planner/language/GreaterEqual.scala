@@ -1,4 +1,4 @@
-package gmt.planner.operation
+package gmt.planner.language
 
 object GreaterEqual extends TermOperation {
     def FUNCTION: (Term, Term) => Term = (a, b) => GreaterEqual(a, b)

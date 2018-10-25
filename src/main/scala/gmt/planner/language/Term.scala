@@ -1,6 +1,6 @@
-package gmt.planner.operation
+package gmt.planner.language
 
-import gmt.planner.operation.Type.EnumType
+import gmt.planner.language.Type.EnumType
 
 abstract class Term {
 

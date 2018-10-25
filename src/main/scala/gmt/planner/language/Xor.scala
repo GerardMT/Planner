@@ -1,4 +1,4 @@
-package gmt.planner.operation
+package gmt.planner.language
 
 object Xor extends TermOperation {
     def FUNCTION: (Term, Term) => Term = (a, b) => Xor(a, b)

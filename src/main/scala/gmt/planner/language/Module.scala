@@ -1,10 +1,10 @@
-package gmt.planner.operation
+package gmt.planner.language
 
-object Divide extends TermOperation {
-    def FUNCTION: (Term, Term) => Term = (a, b) => Divide(a, b)
+object Module extends TermOperation {
+    def FUNCTION: (Term, Term) => Term = (a, b) => Module(a, b)
 }
 
-case class Divide(a: Term, b: Term) extends Term {
+case class Module(a: Term, b: Term) extends Term {
 
     if (a.returnType != Type.Integer || b.returnType != Type.Integer) {
         throw InvalidTermException(toString)
