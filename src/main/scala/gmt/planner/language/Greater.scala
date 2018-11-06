@@ -10,5 +10,5 @@ case class Greater(a: Term, b: Term) extends Term {
         throw InvalidTermException(toString)
     }
 
-    override def returnType: Type.EnumType = Type.Integer
+    override def returnType: Type.EnumType = Type.Boolean
 }

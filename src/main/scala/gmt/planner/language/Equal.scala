@@ -12,5 +12,5 @@ case class Equal(a: Term, b: Term) extends Term {
         throw InvalidTermException(toString)
     }
 
-    override def returnType: EnumType = a.returnType
+    override def returnType: EnumType = Type.Boolean
 }

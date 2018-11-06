@@ -46,8 +46,6 @@ class SMTLib2(logic: SMTLib2.Logic) extends Translator {
                 "(or " + translateTerm(a) + " " + b.map(f => translateTerm(f)).mkString(" ") + ")"
             case Xor(a, b) =>
                 "(xor " + translateTerm(a) + " " + translateTerm(a) + ")"
-            case Xor(a, b) =>
-                "(> " + translateTerm(a) + " " + translateTerm(b) + ")"
             case Equal(a, b) =>
                 "(= " + translateTerm(a) + " " + translateTerm(b) + ")"
             case Distinct(a, b) =>

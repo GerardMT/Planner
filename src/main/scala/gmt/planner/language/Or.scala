@@ -6,7 +6,7 @@ object Or extends TermOperation {
 
 case class Or(many: Term*) extends Term {
 
-    if (!many.forall(f => f.returnType != Type.Boolean) || many.isEmpty) {
+    if (many.exists(f => f.returnType != Type.Boolean) || many.isEmpty) {
         throw InvalidTermException(toString)
     }
 

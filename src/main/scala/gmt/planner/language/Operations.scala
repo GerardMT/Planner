@@ -65,10 +65,15 @@ object Operations {
     def simplify(c: Term): Term = {
         c match {
             case And(c1) => c1
-            case c @ And(_,_ @ _*) => c
+            case c @ And(_, _, _*) => c
             case Or(c1) => c1
-            case c @ Or(_,_ @ _*) => c
+            case c @ Or(_, _, _*) => c
         }
+    }
+
+    def singleTermRemoveOr(or: Or): Term = or match {
+        case Or(t) => t
+        case Or(_, _, _*) => or
     }
 
     def quadraticAmo(v: Seq[Variable]): immutable.Seq[Term] = {
@@ -86,7 +91,7 @@ object Operations {
     }
 
     def alo(v: Seq[Variable]): immutable.Seq[Term] = {
-        List(ClauseDeclaration(Or(v.map(f => f): _*)): Term)
+        List(ClauseDeclaration(Or(v: _*)): Term)
     }
 
     def eoWithQuatradicAmmo(v: Seq[Variable]): immutable.Seq[Term] = {

@@ -6,7 +6,7 @@ object Xor extends TermOperation {
 
 case class Xor(a: Term, b: Term) extends Term {
 
-    if (a.returnType != Type.Boolean || b.returnType != Type.Boolean) {
+    if (a.returnType != b.returnType) {
         throw InvalidTermException(toString)
     }
 

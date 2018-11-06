@@ -9,9 +9,9 @@ import gmt.planner.translator.Translator
 
 import scala.collection.mutable.ListBuffer
 
-class Planner[A, B](val plannerOptions: PlannerOptions) {
+class Planner[A](val plannerOptions: PlannerOptions) {
 
-    def solve(encoder: Encoder[A, B], translator: Translator, solver: Solver): PlannerResult = {
+    def solve(encoder: Encoder[A], translator: Translator, solver: Solver): PlannerResult = {
         val lowerBound = plannerOptions.lowerBound match {
             case Some(n) =>
                 n

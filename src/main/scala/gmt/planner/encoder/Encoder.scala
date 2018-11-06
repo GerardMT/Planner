@@ -1,17 +1,14 @@
 package gmt.planner.encoder
 
-import gmt.planner.solver.Assignment
+import gmt.planner.solver.value.Value
 
-/**
-  *
-  * @tparam A encoding data
-  * @tparam B decoding result
-  */
-trait Encoder[A, B] {
+import scala.collection.immutable
 
-    def encode(nTimeSteps: Int): EncoderResult[A]
+trait Encoder[A] {
 
-    def decode(assignments: Seq[Assignment], encodingData: A): B
+    def encode(nTimeSteps: Int): Encoding
+
+    def decode(assignments: immutable.Map[String, Value]): immutable.Seq[A]
 
     def lowerBound(): Int
 
