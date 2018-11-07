@@ -7,7 +7,7 @@ object Negate extends TermOperation {
 case class Negate(a: Term) extends Term {
 
     if (a.returnType != Type.Integer) {
-        throw InvalidTermException(toString)
+        throw InvalidTermException(this)
     }
 
     override def returnType: Type.EnumType = Type.Integer

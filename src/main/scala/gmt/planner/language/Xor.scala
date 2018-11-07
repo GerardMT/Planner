@@ -7,7 +7,7 @@ object Xor extends TermOperation {
 case class Xor(a: Term, b: Term) extends Term {
 
     if (a.returnType != b.returnType) {
-        throw InvalidTermException(toString)
+        throw InvalidTermException(this)
     }
 
     override def returnType: Type.EnumType = Type.Boolean

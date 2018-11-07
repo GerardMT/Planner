@@ -3,15 +3,26 @@ package gmt.planner.planner
 import gmt.planner.encoder.Encoder
 import gmt.planner.fixedPlanner.FixedPlanner
 import gmt.planner.fixedPlanner.FixedPlannerResult.{FixedPlannerResult, NoneFixedPlannerResult, SomeFixedPlannerResult}
+import gmt.planner.planner.Planner.UpdateListener
 import gmt.planner.planner.PlannerResult.{NonePlannerResult, PlannerResult, SomePlannerResult}
 import gmt.planner.solver.{Result, Solver}
 import gmt.planner.translator.Translator
 
 import scala.collection.mutable.ListBuffer
 
-class Planner[A](val plannerOptions: PlannerOptions) {
+object Planner {
 
-    def solve(encoder: Encoder[A], translator: Translator, solver: Solver): PlannerResult = {
+    trait UpdateListener {
+
+        def updated(fixedPlannerResult: FixedPlannerResult)
+    }
+}
+
+class Planner[A](val plannerOptions: PlannerOptions, encoder: Encoder[A], translator: Translator, solver: Solver) {
+
+    var updateListener: Option[UpdateListener] = None
+
+    def solve(): PlannerResult = {
         val lowerBound = plannerOptions.lowerBound match {
             case Some(n) =>
                 n
@@ -31,15 +42,20 @@ class Planner[A](val plannerOptions: PlannerOptions) {
         val startTime = System.currentTimeMillis()
 
         var timeStep = lowerBound
-        var results = ListBuffer.empty[FixedPlannerResult]
+        val results = ListBuffer.empty[FixedPlannerResult]
 
         var loop = true
 
-        while (loop) {
+        while (loop && timeStep <= upperBound) {
             val result = fixedPlanner.solve(timeStep)
             results.append(result)
 
-            loop = result.result == Result.Satisfactible || result.result == Result.Unknown
+            loop = result.result == Result.Unsatisfactible
+
+            updateListener match {
+                case Some(c) => c.updated(result)
+                case None =>
+            }
 
             timeStep += 1
         }

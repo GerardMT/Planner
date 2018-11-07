@@ -35,7 +35,7 @@ class Yices2Solver(solverBinaryPath: String) extends Solver {
 
         val time = endTime - startTime
 
-        if (result != Result.Unknown) {
+        if (result == Result.Satisfactible) {
             val assignments = ListBuffer.empty[Assignment]
 
             for (l <- lines.tail) {

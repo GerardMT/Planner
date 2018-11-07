@@ -1,6 +1,6 @@
 package gmt.planner.encoder
 
-import gmt.planner.language.{Term, Variable, VariableDeclaration}
+import gmt.planner.language.{Operations, Term, Variable, VariableDeclaration}
 
 import scala.collection.mutable.ListBuffer
 import scala.collection.{immutable, mutable}
@@ -34,5 +34,5 @@ class Encoding {
         e.foreach(f => add(f))
     }
 
-    def expressions: immutable.Seq[Term]  = _expressions.toList
+    def terms: immutable.Seq[Term]  = _expressions.toList
 }

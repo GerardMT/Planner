@@ -25,5 +25,4 @@ object PlannerResult {
         extends PlannerResult(result,
             milliseconds,
             fixedPlannerResults)
-
 }

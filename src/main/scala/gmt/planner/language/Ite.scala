@@ -7,7 +7,7 @@ object Ite extends TermOperation {
 case class Ite(a: Term, b: Term, c: Term) extends Term {
 
     if (a.returnType != b.returnType || a.returnType != c.returnType) {
-        throw InvalidTermException(toString)
+        throw InvalidTermException(this)
     }
 
     override def returnType: Type.EnumType = a.returnType

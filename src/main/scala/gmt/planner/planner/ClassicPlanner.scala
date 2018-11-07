@@ -3,7 +3,7 @@ package gmt.planner.planner
 import gmt.planner.encoder.{Encoder, Encoding}
 import gmt.planner.language._
 import gmt.planner.planner.ClassicPlanner._
-import gmt.planner.solver.value.Value
+import gmt.planner.solver.value.{Value, ValueBoolean}
 
 import scala.collection.immutable
 
@@ -23,7 +23,19 @@ object ClassicPlanner {
 
         val variable = Variable(name, Type.Boolean)
 
-        def encode(): ActionEncoding
+        def encode(): ActionEncoding = {
+
+            val pre = Operations.multipleTermsApply(preconditions(), And.FUNCTION_MULTIPLE)
+            val eff = Operations.multipleTermsApply(effects(), And.FUNCTION_MULTIPLE)
+
+            ActionEncoding(pre, eff, terms())
+        }
+
+        protected def terms(): immutable.Seq[Term]
+
+        protected def preconditions(): immutable.Seq[Term]
+
+        protected def effects(): immutable.Seq[Term]
 
         def decode(assignments: immutable.Map[String, Value]): immutable.Seq[A]
 
@@ -47,7 +59,7 @@ abstract class ClassicPlanner[S <: State, I, A] extends Encoder[A]{
 
     def encodeTimeStep(timeStep: TimeStep[S, A]): immutable.Seq[Term]
 
-    def goal(state: S): immutable.Seq[Term]
+    def encodeGoal(state: S): immutable.Seq[Term]
 
     override def encode(nTimeSteps: Int): Encoding = {
         val encoding = new Encoding()
@@ -66,7 +78,7 @@ abstract class ClassicPlanner[S <: State, I, A] extends Encoder[A]{
         encoding.add(encodeInitialState(timeSteps.head.sT): _*)
 
         for (timeStep <- timeSteps) {
-            encoding.add(Operations.eoWithQuatradicAmmo(timeStep.actions.map(f => f.variable)): _*)
+            encoding.add(Operations.eoWithQuatradicAmo(timeStep.actions.map(f => f.variable)): _*)
             encoding.add(encodeTimeStep(timeStep): _*)
 
             for (action <- timeStep.actions) {
@@ -75,11 +87,11 @@ abstract class ClassicPlanner[S <: State, I, A] extends Encoder[A]{
                 encoding.add(terms: _*)
 
                 encoding.add(ClauseDeclaration(eff == action.variable))
-                encoding.add(ClauseDeclaration(action.variable -> pre))
+                encoding.add(ClauseDeclaration(action.variable ==> pre))
             }
         }
 
-        encoding.add(goal(timeSteps.last.sTPlus): _*)
+        encoding.add(encodeGoal(timeSteps.last.sTPlus): _*)
 
         _timeSteps = Some(timeSteps)
         encoding
@@ -93,6 +105,6 @@ abstract class ClassicPlanner[S <: State, I, A] extends Encoder[A]{
                 throw new IllegalStateException()
         }
 
-        timeSteps.flatMap(t => t.actions.flatMap(a => a.decode(assignments)))
+        timeSteps.flatMap(t => t.actions.find(f => assignments(f.variable.name).asInstanceOf[ValueBoolean].v).get.decode(assignments))
     }
 }

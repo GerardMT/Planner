@@ -1,3 +1,3 @@
 package gmt.planner.language
 
-case class InvalidTermException(message: String) extends Exception(message)
+case class InvalidTermException(term: Term) extends Exception(term.toString)

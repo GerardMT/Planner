@@ -6,7 +6,7 @@ abstract class Term {
 
     def unary_!(): Term = Not.FUNCTION(this)
 
-    def ->(that: Term): Term = Implies.FUNCTION(this, that)
+    def ==>(that: Term): Term = Implies.FUNCTION(this, that)
 
     def &&(that: Term): Term = And.FUNCTION(this, that)
 

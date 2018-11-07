@@ -7,7 +7,7 @@ object Multiply extends TermOperation {
 case class Multiply(a: Term, b: Term) extends Term {
 
     if (a.returnType != Type.Integer || b.returnType != Type.Integer) {
-        throw InvalidTermException(toString)
+        throw InvalidTermException(this)
     }
 
     override def returnType: Type.EnumType = Type.Integer

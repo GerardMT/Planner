@@ -71,9 +71,11 @@ object Operations {
         }
     }
 
-    def singleTermRemoveOr(or: Or): Term = or match {
-        case Or(t) => t
-        case Or(_, _, _*) => or
+    def multipleTermsApply(terms: immutable.Seq[Term], f: immutable.Seq[Term] => Term): Term = terms match {
+        case immutable.Seq(a)=>
+            a
+        case immutable.Seq(_, _, _*) =>
+            f(terms)
     }
 
     def quadraticAmo(v: Seq[Variable]): immutable.Seq[Term] = {
@@ -81,7 +83,7 @@ object Operations {
 
         val vPerf = v.to[ArrayBuffer]
 
-        for (i <- vPerf.indices) {
+        for (i <- 0 until vPerf.length - 1) {
             for (j <- i until vPerf.length) {
                 terms.append(ClauseDeclaration(!vPerf(i) || !vPerf(j)))
             }
@@ -94,8 +96,7 @@ object Operations {
         List(ClauseDeclaration(Or(v: _*)): Term)
     }
 
-    def eoWithQuatradicAmmo(v: Seq[Variable]): immutable.Seq[Term] = {
-        alo(v)
-        quadraticAmo(v)
+    def eoWithQuatradicAmo(v: Seq[Variable]): immutable.Seq[Term] = {
+        alo(v) ++ quadraticAmo(v)
     }
 }
