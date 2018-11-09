@@ -12,5 +12,5 @@ case class Distinct(a: Term, b: Term) extends Term {
         throw InvalidTermException(this)
     }
 
-    override def returnType: EnumType = a.returnType
+    override def returnType: EnumType = Type.Boolean
 }

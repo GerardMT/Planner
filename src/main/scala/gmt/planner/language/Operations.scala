@@ -84,7 +84,7 @@ object Operations {
         val vPerf = v.to[ArrayBuffer]
 
         for (i <- 0 until vPerf.length - 1) {
-            for (j <- i until vPerf.length) {
+            for (j <- i + 1 until vPerf.length) {
                 terms.append(ClauseDeclaration(!vPerf(i) || !vPerf(j)))
             }
         }

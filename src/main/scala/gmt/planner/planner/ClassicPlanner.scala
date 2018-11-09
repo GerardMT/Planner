@@ -78,7 +78,13 @@ abstract class ClassicPlanner[S <: State, I, A] extends Encoder[A]{
         encoding.add(encodeInitialState(timeSteps.head.sT): _*)
 
         for (timeStep <- timeSteps) {
-            encoding.add(Operations.eoWithQuatradicAmo(timeStep.actions.map(f => f.variable)): _*)
+            timeStep.actions match {
+                case immutable.Seq(_, _, _*) =>
+                    encoding.add(Operations.eoWithQuatradicAmo(timeStep.actions.map(f => f.variable)): _*)
+                case immutable.Seq(a) =>
+                    encoding.add(ClauseDeclaration(a.variable))
+            }
+
             encoding.add(encodeTimeStep(timeStep): _*)
 
             for (action <- timeStep.actions) {
