@@ -57,7 +57,9 @@ abstract class ClassicPlanner[S <: State, I, A] extends Encoder[A]{
 
     def encodeInitialState(state: S): immutable.Seq[Term]
 
-    def encodeTimeStep(timeStep: TimeStep[S, A]): immutable.Seq[Term]
+    def encodeOtherStates(state: S): immutable.Seq[Term] = Nil
+
+    def encodeTimeStep(timeStep: TimeStep[S, A]): immutable.Seq[Term] = Nil
 
     def encodeGoal(state: S): immutable.Seq[Term]
 
@@ -76,6 +78,9 @@ abstract class ClassicPlanner[S <: State, I, A] extends Encoder[A]{
         }
 
         encoding.add(encodeInitialState(timeSteps.head.sT): _*)
+        for (s <- states.tail) {
+            encoding.add(encodeOtherStates(s): _*)
+        }
 
         for (timeStep <- timeSteps) {
             timeStep.actions match {

@@ -1,6 +1,6 @@
 package gmt.planner.encoder
 
-import gmt.planner.language.{Operations, Term, Variable, VariableDeclaration}
+import gmt.planner.language.{ClauseDeclaration, Comment, InvalidTermException, Operations, Term, Variable, VariableDeclaration}
 
 import scala.collection.mutable.ListBuffer
 import scala.collection.{immutable, mutable}
@@ -23,8 +23,12 @@ class Encoding {
                         _variablesSet.add(variableName)
                         _expressions.append(t)
                     }
-                case f =>
+                case t @ ClauseDeclaration(_) =>
                     _expressions.append(t)
+                case t @ Comment(_) =>
+                    _expressions.append(t)
+                case _ =>
+                    throw InvalidTermException(t);
             }
         }
     }
