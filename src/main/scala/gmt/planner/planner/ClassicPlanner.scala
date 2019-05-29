@@ -13,7 +13,9 @@ object ClassicPlanner {
         def getVariables: immutable.Seq[Variable]
     }
 
-    abstract class State(val number: Int) extends VariableGenerator
+    abstract class State(val number: Int) extends VariableGenerator {
+        def print(assignments: immutable.Map[String, Value])
+    }
 
     abstract class Action[S <: State, A](val sT: S, val sTPlus: S) extends VariableGenerator {
 
@@ -50,6 +52,8 @@ object ClassicPlanner {
 abstract class ClassicPlanner[S <: State, I, A] extends Encoder[A]{
 
     private var _timeSteps: Option[immutable.Seq[TimeStep[S, A]]] = None
+
+    private var _states: Option[immutable.Seq[State]] = None
 
     def createState(number: Int): S
 
@@ -105,16 +109,22 @@ abstract class ClassicPlanner[S <: State, I, A] extends Encoder[A]{
         encoding.add(encodeGoal(timeSteps.last.sTPlus): _*)
 
         _timeSteps = Some(timeSteps)
+        _states = Some(states)
         encoding
     }
 
     override def decode(assignments: Map[String, Value]): immutable.Seq[A] = {
         val timeSteps = _timeSteps match {
-            case Some(t) =>
-                t
-            case None =>
-                throw new IllegalStateException()
+            case Some(t) => t
+            case None => throw new IllegalStateException()
         }
+
+        val states = _states match {
+            case Some(t) => t
+            case None => throw new IllegalStateException()
+        }
+
+        states.foreach(f => f.print(assignments))
 
         timeSteps.flatMap(t => t.actions.find(f => assignments(f.variable.name).asInstanceOf[ValueBoolean].v).get.decode(assignments))
     }

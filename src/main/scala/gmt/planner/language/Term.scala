@@ -6,7 +6,7 @@ abstract class Term {
 
     def unary_!(): Term = Not.FUNCTION(this)
 
-    def ==>(that: Term): Term = Implies.FUNCTION(this, that)
+    def ==>(that: Term): Term = Implies.FUNCTION(this, that) // Careful, higher precedence than && and ||
 
     def &&(that: Term): Term = And.FUNCTION(this, that)
 
@@ -14,9 +14,9 @@ abstract class Term {
 
     def ^(that: Term): Term = Xor.FUNCTION(this, that)
 
-    def ==(that: Term): Term = Equal.FUNCTION(this, that)
+    def ==(that: Term): Term = Equal.FUNCTION(this, that) // Careful, higher precedence than && and ||
 
-    def !=(that: Term): Term = Distinct.FUNCTION(this, that)
+    def !=(that: Term): Term = Distinct.FUNCTION(this, that) // Careful, higher precedence than && and ||
 
     // ite
 
