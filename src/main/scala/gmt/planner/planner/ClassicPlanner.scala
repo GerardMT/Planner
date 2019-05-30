@@ -1,6 +1,7 @@
 package gmt.planner.planner
 
 import gmt.planner.encoder.{Encoder, Encoding}
+import gmt.planner.fixedPlanner.FixedPlannerResult
 import gmt.planner.language._
 import gmt.planner.planner.ClassicPlanner._
 import gmt.planner.solver.value.{Value, ValueBoolean}
@@ -14,7 +15,8 @@ object ClassicPlanner {
     }
 
     abstract class State(val number: Int) extends VariableGenerator {
-        def print(assignments: immutable.Map[String, Value])
+
+        def decode(assignments: Map[String, Value], updatesCallback:ClassicPlannerUpdatesCallback): Unit
     }
 
     abstract class Action[S <: State, A](val sT: S, val sTPlus: S) extends VariableGenerator {
@@ -39,7 +41,7 @@ object ClassicPlanner {
 
         protected def effects(): immutable.Seq[Term]
 
-        def decode(assignments: immutable.Map[String, Value]): immutable.Seq[A]
+        def decode(assignments: immutable.Map[String, Value], updatesCallback:ClassicPlannerUpdatesCallback): immutable.Seq[A]
 
         def getVariables: immutable.Seq[Variable] = List(variable)
     }
@@ -47,9 +49,14 @@ object ClassicPlanner {
     case class ActionEncoding(pre: Term, eff: Term, terms: immutable.Seq[Term])
 
     case class TimeStep[S <: State, P](sT: S, sTPlus: S, actions: immutable.Seq[Action[S, P]])
+
+    class ClassicPlannerUpdatesCallback {
+        def plannerUpdate: Option[FixedPlannerResult.FixedPlannerResult => _] = None
+        def stateDecoded: Option[(_ <: State, Map[String, Value]) => _] = None
+    }
 }
 
-abstract class ClassicPlanner[S <: State, I, A] extends Encoder[A]{
+abstract class ClassicPlanner[S <: State, I, A](val updatesCallback: ClassicPlannerUpdatesCallback) extends Encoder[A]{
 
     private var _timeSteps: Option[immutable.Seq[TimeStep[S, A]]] = None
 
@@ -124,8 +131,7 @@ abstract class ClassicPlanner[S <: State, I, A] extends Encoder[A]{
             case None => throw new IllegalStateException()
         }
 
-        states.foreach(f => f.print(assignments))
-
-        timeSteps.flatMap(t => t.actions.find(f => assignments(f.variable.name).asInstanceOf[ValueBoolean].v).get.decode(assignments))
+        states.foreach(f => f.decode(assignments, updatesCallback))
+        timeSteps.flatMap(t => t.actions.find(f => assignments(f.variable.name).asInstanceOf[ValueBoolean].v).get.decode(assignments, updatesCallback))
     }
 }

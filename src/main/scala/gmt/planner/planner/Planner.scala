@@ -3,24 +3,16 @@ package gmt.planner.planner
 import gmt.planner.encoder.Encoder
 import gmt.planner.fixedPlanner.FixedPlanner
 import gmt.planner.fixedPlanner.FixedPlannerResult.{FixedPlannerResult, NoneFixedPlannerResult, SomeFixedPlannerResult}
-import gmt.planner.planner.Planner.UpdateListener
 import gmt.planner.planner.PlannerResult.{NonePlannerResult, PlannerResult, SomePlannerResult}
 import gmt.planner.solver.{Result, Solver}
 import gmt.planner.translator.Translator
 
 import scala.collection.mutable.ListBuffer
 
-object Planner {
-
-    trait UpdateListener {
-
-        def updated(fixedPlannerResult: FixedPlannerResult)
-    }
-}
 
 class Planner[A](val plannerOptions: PlannerOptions, encoder: Encoder[A], translator: Translator, solver: Solver) {
 
-    var updateListener: Option[UpdateListener] = None
+    var updateListener: Option[FixedPlannerResult => _] = None
 
     def solve(): PlannerResult = {
         val lowerBound = plannerOptions.lowerBound match {
@@ -53,7 +45,7 @@ class Planner[A](val plannerOptions: PlannerOptions, encoder: Encoder[A], transl
             loop = result.result == Result.Unsatisfactible
 
             updateListener match {
-                case Some(c) => c.updated(result)
+                case Some(c) => c(result)
                 case None =>
             }
 
