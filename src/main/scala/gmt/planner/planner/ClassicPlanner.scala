@@ -16,7 +16,7 @@ object ClassicPlanner {
 
     abstract class State(val number: Int) extends VariableGenerator {
 
-        def decode(assignments: Map[String, Value], updatesCallback:ClassicPlannerUpdatesCallback): Unit
+        def decode(assignments: Map[String, Value], updatesCallback:ClassicPlannerUpdatesCallback): Unit = {}
     }
 
     abstract class Action[S <: State, A](val sT: S, val sTPlus: S) extends VariableGenerator {
@@ -35,7 +35,7 @@ object ClassicPlanner {
             ActionEncoding(pre, eff, terms())
         }
 
-        protected def terms(): immutable.Seq[Term]
+        protected def terms(): immutable.Seq[Term] = Nil
 
         protected def preconditions(): immutable.Seq[Term]
 
@@ -70,6 +70,8 @@ abstract class ClassicPlanner[S <: State, I, A](val updatesCallback: ClassicPlan
 
     def encodeOtherStates(state: S): immutable.Seq[Term] = Nil
 
+    def encodeAllStates(state: S): immutable.Seq[Term] = Nil
+
     def encodeTimeStep(timeStep: TimeStep[S, A]): immutable.Seq[Term] = Nil
 
     def encodeGoal(state: S): immutable.Seq[Term]
@@ -91,6 +93,9 @@ abstract class ClassicPlanner[S <: State, I, A](val updatesCallback: ClassicPlan
         encoding.add(encodeInitialState(timeSteps.head.sT): _*)
         for (s <- states.tail) {
             encoding.add(encodeOtherStates(s): _*)
+        }
+        for (s <- states) {
+            encoding.add(encodeAllStates(s): _*)
         }
 
         for (timeStep <- timeSteps) {

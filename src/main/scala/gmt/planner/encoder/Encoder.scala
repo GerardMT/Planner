@@ -10,7 +10,11 @@ trait Encoder[A] {
 
     def decode(assignments: immutable.Map[String, Value]): immutable.Seq[A]
 
-    def lowerBound(): Int
+    def lowerBound(): Int = {
+        throw new UnsupportedOperationException()
+    }
 
-    def upperBound(): Int
+    def upperBound(): Int = {
+        throw new UnsupportedOperationException()
+    }
 }
